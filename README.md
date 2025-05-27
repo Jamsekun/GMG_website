@@ -1,11 +1,9 @@
-# GMG_website
-website booking service app with inventory and employee management project. Just for fun with 2 more people i know
 
-# Website Prototype Project Setup Guide
+# GMG Website - Project Setup Guide
 
 **Date:** May 28, 2025
 
-Welcome to the **GMG Website** project! This guide will help you set up the project on your local machine using the MERN stack (MongoDB, Express, React, Node.js) with React, Vite, TypeScript, SWC, and Tailwind CSS. Follow these steps to install the required apps, configure your environment, and start collaborating with the team using GitHub, Trello, and Figma.
+Welcome to the **GMG Website** project! This guide will help you set up the project on your local machine using the MERN stack (MongoDB, Express, React, Node.js) with React, Vite, TypeScript, SWC, and Tailwind CSS. Follow these steps to install the required apps, configure your environment, and start collaborating with the team using GitHub.
 
 ---
 
@@ -18,9 +16,8 @@ Welcome to the **GMG Website** project! This guide will help you set up the proj
 5. [Setting Up the Backend](#setting-up-the-backend)
 6. [Running the Project](#running-the-project)
 7. [Testing the Setup](#testing-the-setup)
-8. [Using Collaboration Tools](#using-collaboration-tools)
-9. [Working with GitHub](#working-with-github)
-10. [Troubleshooting Common Issues](#troubleshooting-common-issues)
+8. [Working with GitHub](#working-with-github)
+9. [Troubleshooting Common Issues](#troubleshooting-common-issues)
 
 ---
 
@@ -31,9 +28,11 @@ Before you begin, ensure you have the following installed:
 - **Node.js**: Version 18 or higher (we recommend v22.14.0). Download from [nodejs.org](https://nodejs.org).
 - **Git**: For version control. Download from [git-scm.com](https://git-scm.com).
 - **Visual Studio Code (VS Code)**: Our recommended IDE. Download from [code.visualstudio.com](https://code.visualstudio.com).
-- **MongoDB Atlas Account**: Required for the database. Ask the team lead to add you to the team's MongoDB Atlas project.
+- **MongoDB**: Either:
+  - MongoDB Atlas account (ask the team lead for access)
+  - Local MongoDB installation (version 6.0 or higher)
 - **Terminal**: Use Bash, PowerShell, or Git Bash (for Windows users).
-- **GitHub Access**: Ensure you have access to the project repository (e.g., `https://github.com/<your-org>/wellness-coffee-lounge`).
+- **GitHub Access**: Ensure you have access to the project repository: [GMG_website](https://github.com/Jamsekun/GMG_website/tree/develop)
 
 ---
 
@@ -57,18 +56,17 @@ To improve your development experience, install these extensions in VS Code:
 
 1. Open your terminal and navigate to your preferred directory:
    ```bash
-   cd ~/Projects
+   cd C:\James_folder\embedded_projects\Startup_Company
    ```
 
 2. Clone the repository:
    ```bash
-   git clone https://github.com/<your-org>/wellness-coffee-lounge.git
+   git clone https://github.com/Jamsekun/GMG_website.git GMG_website-1
    ```
-   Replace `<your-org>` with the actual organization or username.
 
 3. Navigate into the project folder:
    ```bash
-   cd wellness-coffee-lounge
+   cd GMG_website-1
    ```
 
 4. Switch to the develop branch:
@@ -111,15 +109,22 @@ To improve your development experience, install these extensions in VS Code:
    npm install
    ```
 
-3. Create a `.env` file:
+3. Create a `.env` file if it doesn't exist:
    ```bash
    touch .env
    ```
 
-4. Add your MongoDB Atlas URI to the `.env` file (ask the team lead for the connection string):
+4. Add your MongoDB configuration to the `.env` file:
    ```env
-   MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/wellness-coffee-lounge?retryWrites=true&w=majority
+   # For MongoDB Atlas
+   MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/gq-good-coffee?retryWrites=true&w=majority
+   
+   # For local MongoDB
+   MONGODB_URI=mongodb://localhost:27017/gq-good-coffee
+   
+   PORT=5000
    ```
+   Replace `<username>` and `<password>` with your credentials.
 
 ---
 
@@ -135,7 +140,7 @@ To improve your development experience, install these extensions in VS Code:
 ### Start the Frontend:
 1. Open a new terminal and navigate to the frontend directory:
    ```bash
-   cd ~/Projects/wellness-coffee-lounge/frontend
+   cd C:\James_folder\embedded_projects\Startup_Company\GMG_website-1\frontend
    ```
 2. Run the development server:
    ```bash
@@ -148,39 +153,15 @@ To improve your development experience, install these extensions in VS Code:
 ## Testing the Setup
 
 ### Frontend Test:
-1. Go to http://localhost:5173/bookings.
-2. Fill out the booking form (e.g., Name: "Test User", Service: "Coffee Tasting", Date: a future date).
-3. Submit and check for a success message.
+1. Navigate through the website pages to ensure they load correctly.
+2. Test any interactive components (forms, buttons, etc.).
 
 ### Backend Test:
-1. Use Postman to send a POST request to http://localhost:5000/api/bookings:
-   ```json
-   {
-     "name": "Test User",
-     "service": "Coffee Tasting",
-     "date": "2025-06-01T10:00:00Z"
-   }
+1. Use Postman or curl to test API endpoints:
+   ```bash
+   curl http://localhost:5000/api/example
    ```
-2. Expect a 201 status and a response with the saved booking.
-
----
-
-## Using Collaboration Tools
-
-### Trello
-- **Access**: Ask the team lead for the Trello board link.
-- **How to Use**:
-  - Check the "To Do" column for tasks assigned to you.
-  - Move tasks to "In Progress" when working on them.
-  - Move completed tasks to "Done".
-  - Add comments or questions to task cards.
-
-### Figma
-- **Access**: Ask the team lead for the Figma design file link.
-- **How to Use**:
-  - Reference designs for styling components.
-  - Use Figma's color codes and spacing in Tailwind CSS classes.
-  - Leave comments on designs for feedback.
+2. Verify you receive the expected response.
 
 ---
 
@@ -190,12 +171,12 @@ To improve your development experience, install these extensions in VS Code:
    ```bash
    git checkout -b feature/<your-feature-name>
    ```
-   Example: `git checkout -b feature/add-login-page`
+   Example: `git checkout -b feature/add-contact-page`
 
 2. Make Changes and Commit:
    ```bash
    git add .
-   git commit -m "Add login page component with form"
+   git commit -m "Add contact page component with form"
    ```
 
 3. Push to GitHub:
@@ -208,7 +189,7 @@ To improve your development experience, install these extensions in VS Code:
    - Click "Pull requests" > "New pull request".
    - Select your branch and compare with `develop`.
    - Add a title and description, then submit.
-   - Assign reviewers and link to Trello task if applicable.
+   - Assign reviewers if applicable.
 
 5. Stay Updated:
    ```bash
@@ -230,7 +211,8 @@ To improve your development experience, install these extensions in VS Code:
 
 - **MongoDB Connection Error**:
   - Check your `MONGODB_URI` in `.env`.
-  - Ensure your IP is allowlisted in MongoDB Atlas.
+  - For local MongoDB, ensure the service is running.
+  - For Atlas, ensure your IP is allowlisted.
 
 - **Tailwind CSS Not Working**:
   - Verify `tailwind.config.js` exists.
@@ -238,8 +220,9 @@ To improve your development experience, install these extensions in VS Code:
 
 - **Port Already in Use**:
   ```bash
-  lsof -i :5000
-  kill -9 <PID>
+  lsof -i :5000  # Linux/Mac
+  netstat -ano | findstr :5000  # Windows
+  kill -9 <PID>  # or use Task Manager on Windows
   ```
 
 ---
@@ -248,9 +231,7 @@ To improve your development experience, install these extensions in VS Code:
 
 - Keep `.env` files out of Git (they contain sensitive data).
 - Refer to [Tailwind CSS Docs](https://tailwindcss.com/docs) for styling help.
-- Test your setup with the booking form before starting new work.
+- Test your changes thoroughly before creating PRs.
 
-Happy coding, and welcome to the Wellness and Coffee Lounge team! 🚀
+Happy coding sa atin! 🚀
 ```
-
-This README.md file includes all the necessary setup instructions, formatted with proper Markdown syntax for headings, code blocks, and lists. I've also fixed some minor formatting issues from the original content and added an emoji at the end for a friendly touch.
