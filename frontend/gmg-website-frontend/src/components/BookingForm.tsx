@@ -1,42 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+interface Service {
+  _id: string;
+  name: string;
+  price: number;
+  duration: number;
+}
 
 interface FormData {
   name: string;
-  service: string;
+  serviceId: string;
   date: string;
 }
 
 function BookingForm() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    service: "",
+    serviceId: "",
     date: "",
   });
+  const [services, setServices] = useState<Service[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const services = ["Coffee Tasting", "Spa Massage", "Yoga Session", "Barber Cut"];
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    // Fetch services
+    const fetchServices = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/services", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setServices(data);
+        }
+      } catch (error) {
+        console.error("Error fetching services:", error);
+        setMessage("Error loading services");
+      }
+    };
+
+    fetchServices();
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setMessage("");
 
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setMessage("Please login to make a booking");
+      navigate('/login');
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/api/bookings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         setMessage("Booking created successfully!");
-        setFormData({ name: "", service: "", date: "" });
+        setFormData({ name: "", serviceId: "", date: "" });
       } else {
-        setMessage("Failed to create booking. Please try again.");
+        const data = await response.json();
+        setMessage(data.message || "Failed to create booking. Please try again.");
       }
-    } catch (err) {
-      console.error("Booking error:", err); // ✅ Logs the error so it's used
+    } catch (error) {
+      console.error("Booking error:", error);
       setMessage("Error connecting to the server.");
     } finally {
       setIsSubmitting(false);
@@ -55,7 +102,7 @@ function BookingForm() {
             id="name"
             type="text"
             placeholder="Your Name"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-amber-500 focus:border-amber-500"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
@@ -68,17 +115,17 @@ function BookingForm() {
           </label>
           <select
             id="service"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
-            value={formData.service}
-            onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-amber-500 focus:border-amber-500"
+            value={formData.serviceId}
+            onChange={(e) => setFormData({ ...formData, serviceId: e.target.value })}
             required
           >
             <option value="" disabled>
               Select a service
             </option>
             {services.map((service) => (
-              <option key={service} value={service}>
-                {service}
+              <option key={service._id} value={service._id}>
+                {service.name} - ${service.price} ({service.duration} mins)
               </option>
             ))}
           </select>
@@ -91,7 +138,7 @@ function BookingForm() {
           <input
             id="date"
             type="datetime-local"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-amber-500 focus:border-amber-500"
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             required
@@ -101,7 +148,7 @@ function BookingForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition-colors ${
+          className={`w-full bg-amber-600 text-white p-2 rounded-md hover:bg-amber-700 transition-colors ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
