@@ -131,16 +131,19 @@ To improve your development experience, install these extensions in VS Code:
 ## Running the Project
 
 ### Start the Backend:
+0. Open a new terminal and navigate to the frontend directory:
+   ```bash
+   cd C:\James_folder\embedded_projects\Startup_Company\GMG_website-1\backend
 1. In the backend directory:
    ```bash
-   node index.js
+   node server.js
    ```
 2. Visit http://localhost:5000 in your browser to confirm it's running (should display "Server is up").
 
 ### Start the Frontend:
 1. Open a new terminal and navigate to the frontend directory:
    ```bash
-   cd C:\James_folder\embedded_projects\Startup_Company\GMG_website-1\frontend
+   cd C:\James_folder\embedded_projects\Startup_Company\GMG_website-1\frontend\gmg-website-frontend
    ```
 2. Run the development server:
    ```bash
