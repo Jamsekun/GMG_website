@@ -140,7 +140,7 @@ To improve your development experience, install these extensions in VS Code:
 ### Start the Frontend:
 1. Open a new terminal and navigate to the frontend directory:
    ```bash
-   cd C:\James_folder\embedded_projects\Startup_Company\GMG_website-1\frontend
+   cd C:\James_folder\embedded_projects\Startup_Company\GMG_website-1\frontend\gmg-website-frontend
    ```
 2. Run the development server:
    ```bash

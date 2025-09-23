@@ -1,9 +1,20 @@
+// i need to get type checker here
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
+const bodyParser = require("body-parser");
 const Service = require('./models/Service');
+const morgan = require('morgan');
+
+
 require('dotenv').config();
+
+
+
+const { authMiddleware, roleMiddleware } = require("./middleware/auth");
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 
@@ -16,7 +27,9 @@ app.use(cors({
 }));
 
 app.use(helmet());
+app.use(bodyParser.json());
 app.use(express.json());
+app.use(morgan('dev'));
 
 // Initial services data
 const initialServices = [
@@ -77,12 +90,27 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch(err => console.error('Could not connect to MongoDB', err));
 
 // Routes
-app.use('/api/users', require('./routes/userRoutes'));
+// app.use('/api/users', require('./routes/userRoutes'));
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Backend is running 🚀',
+    timestamp: new Date().toISOString()
+  });
+});
 app.use('/api/services', require('./routes/serviceRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/inventory', require('./routes/inventoryRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/sales', require('./routes/saleRoutes'));
+
+//AUTHENTICATION new
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+
+app.get("/profile", authMiddleware, (req, res) => {
+  res.json({ msg: "Profile data", user: req.user });
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

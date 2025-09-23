@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { NavBarContainer } from "./NavBarContainer";
+import { NavigationLinks } from "./NavigationLinks";
+import { LoginButton } from "./LoginButton";
+import { Menu, X } from "lucide-react";
 
 interface User {
   id: string;
@@ -7,14 +11,15 @@ interface User {
   role: string;
 }
 
-const Navbar: React.FC = () => {
+export const NavBar: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
     if (token && userData) {
       setIsLoggedIn(true);
       setUser(JSON.parse(userData));
@@ -22,97 +27,47 @@ const Navbar: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
     setUser(null);
-    navigate('/');
+    setIsMobileMenuOpen(false);
+    navigate("/");
   };
 
   return (
-    <nav className="bg-amber-900 text-amber-50 p-4 sticky top-0 z-50 shadow-lg">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <NavLink to="/" className="text-2xl font-bold tracking-tight hover:text-amber-200 transition-colors">
-          ☕ Coffee & Carwash
-        </NavLink>
-
-        {/* Navigation Links */}
-        <div className="flex items-center space-x-8">
-          <ul className="flex space-x-8">
-            <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-amber-200 font-medium"
-                    : "hover:text-amber-200 transition-colors"
-                }
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/services"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-amber-200 font-medium"
-                    : "hover:text-amber-200 transition-colors"
-                }
-              >
-                Services
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/bookings"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-amber-200 font-medium"
-                    : "hover:text-amber-200 transition-colors"
-                }
-              >
-                Bookings
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-amber-200 font-medium"
-                    : "hover:text-amber-200 transition-colors"
-                }
-              >
-                Contact
-              </NavLink>
-            </li>
-          </ul>
-
-          {/* Auth Buttons */}
-          {isLoggedIn ? (
-            <div className="flex items-center space-x-4">
-              <span className="text-amber-200">Welcome, {user?.email}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-amber-700 hover:bg-amber-800 text-amber-50 px-4 py-2 rounded-md transition-colors border border-amber-600"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <NavLink
-              to="/login"
-              className="bg-amber-700 hover:bg-amber-800 text-amber-50 px-4 py-2 rounded-md transition-colors border border-amber-600"
-            >
-              Login
-            </NavLink>
-          )}
-        </div>
+    <NavBarContainer>
+      <div className="hidden md:flex flex-grow justify-center">
+        <NavigationLinks />
       </div>
-    </nav>
+      <div className="hidden md:flex">
+        <LoginButton
+          isLoggedIn={isLoggedIn}
+          user={user}
+          onLogout={handleLogout}
+        />
+      </div>
+      <button
+        className="md:hidden text-white"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        <span className="sr-only">Toggle menu</span>
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+      {isMobileMenuOpen && (
+        <div className="absolute top-full left-0 w-full bg-yellow-950 md:hidden py-4">
+          <NavigationLinks />
+          <div className="flex justify-center mt-4">
+            <LoginButton
+              isLoggedIn={isLoggedIn}
+              user={user}
+              onLogout={handleLogout}
+            />
+          </div>
+        </div>
+      )}
+    </NavBarContainer>
   );
 };
 
-export default Navbar;
+export default NavBar;

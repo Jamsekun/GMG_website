@@ -18,7 +18,7 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage('');
+    setMessage('submitted');
 
     try {
       const endpoint = isLogin ? '/api/users/login' : '/api/users/register';
@@ -27,7 +27,7 @@ function Login() {
       const response = await fetch(`http://localhost:5000${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify(body), 
       });
 
       const data = await response.json();
